@@ -9,6 +9,7 @@ export interface StopwatchState {
   elapsedBeforeRun: number;
   startedAtPerf: number | null;
   startedAtEpoch: number | null;
+  sessionStartedAtEpoch: number | null;
   running: boolean;
   lapAnchorMs: number;
   laps: Lap[];

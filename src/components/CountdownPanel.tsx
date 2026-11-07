@@ -9,9 +9,11 @@ interface Props {
   minutes: number;
   onChangeMinutes: (minutes: number) => void;
   onChoose: (minutes: number) => void;
+  onToggle?: () => void;
+  onReset?: () => void;
 }
 
-export default function CountdownPanel({ timer, minutes, onChangeMinutes, onChoose }: Props) {
+export default function CountdownPanel({ timer, minutes, onChangeMinutes, onChoose, onToggle = timer.toggle, onReset = timer.reset }: Props) {
   const done = timer.remainingMs === 0 && !timer.running;
   const progress = Math.min(100, Math.max(0, (1 - timer.remainingMs / timer.durationMs) * 100));
 
@@ -26,8 +28,8 @@ export default function CountdownPanel({ timer, minutes, onChangeMinutes, onChoo
         <p className="time-hint">{done ? 'Waktu telah habis!' : 'Atur durasi, lalu mulai hitung mundur.'}</p>
       </div>
       <div className="productivity-controls">
-        <button className={`button button-primary${timer.running ? ' is-running' : ''}`} onClick={timer.toggle} type="button"><Icon name={timer.running ? 'pause' : 'play'}/>{timer.running ? 'Jeda' : timer.remainingMs < timer.durationMs && timer.remainingMs > 0 ? 'Lanjutkan' : 'Mulai'}</button>
-        <button className="button button-ghost" onClick={timer.reset} type="button"><Icon name="reset"/>Reset</button>
+        <button className={`button button-primary${timer.running ? ' is-running' : ''}`} onClick={onToggle} type="button"><Icon name={timer.running ? 'pause' : 'play'}/>{timer.running ? 'Jeda' : timer.remainingMs < timer.durationMs && timer.remainingMs > 0 ? 'Lanjutkan' : 'Mulai'}</button>
+        <button className="button button-ghost" onClick={onReset} type="button"><Icon name="reset"/>Reset</button>
       </div>
     </section>
     <aside className="card productivity-info" aria-labelledby="countdown-settings-title">

@@ -1,6 +1,6 @@
 # JustSimple v3 — Every Second Counts
 
-**Versi 3.0.0 | React + TypeScript + Vite | UI berbahasa Indonesia**
+**Versi 3.1.0 (Activity History — tahap 1) | React + TypeScript + Vite | UI berbahasa Indonesia**
 
 Aplikasi produktivitas berbasis web yang dikembangkan dari proyek stopwatch **JustSimple** (proyek awal kuliah), dilanjutkan menjadi JustSimple Pro v2, lalu dimigrasikan ke arsitektur komponen React di v3. Desain dark/light minimalis dan fitur-fitur stopwatch tetap dipertahankan.
 
@@ -9,6 +9,7 @@ Aplikasi produktivitas berbasis web yang dikembangkan dari proyek stopwatch **Ju
 | Modul | Fungsi |
 | --- | --- |
 | Stopwatch | Mulai, jeda, lanjutkan, reset, waktu hingga milidetik |
+| Activity History v3.1 | Simpan sesi stopwatch secara eksplisit; Focus/Countdown lengkap dicatat otomatis; sesi yang dihentikan setelah berjalan disimpan sebagai interrupted (minimal 1 detik); IndexedDB + filter, ekspor CSV dan hapus data |
 | Lap tracker | Catat putaran, lap tercepat, lap terlama, rata-rata, lap berjalan |
 | Riwayat | Tabel lap dari terbaru, hapus lap tanpa mereset timer, export CSV |
 | Persistensi | Stopwatch tersimpan otomatis di `localStorage`, termasuk saat tab dimuat ulang |
@@ -71,15 +72,19 @@ JustSimple-v3/
 │   │   ├── SessionStats.tsx
 │   │   ├── LapHistory.tsx
 │   │   ├── FocusPanel.tsx
-│   │   └── CountdownPanel.tsx
+│   │   ├── CountdownPanel.tsx
+│   │   └── ActivityHistory.tsx
 │   ├── hooks/
 │   │   ├── useStopwatch.ts      # State stopwatch + animation frame
 │   │   ├── useCountdown.ts      # Countdown berdasarkan deadline waktu
-│   │   └── useTheme.ts          # Tema dark/light
+│   │   ├── useTheme.ts
+│   │   └── useActivityHistory.ts          # Tema dark/light
 │   ├── lib/
 │   │   ├── time.ts              # Format, statistik, CSV
 │   │   ├── session.ts           # Validasi + migrasi sesi v2
-│   │   └── download.ts          # Simpan berkas CSV
+│   │   ├── download.ts
+│   │   ├── activity.ts
+│   │   └── activityStore.ts          # Simpan berkas CSV
 │   ├── styles/global.css       # Adaptasi desain CSS JustSimple v2
 │   ├── types.ts
 │   ├── App.tsx
@@ -112,18 +117,30 @@ Pada kunjungan pertama, V3 mencoba membaca data stopwatch V2 jika berasal dari *
 ## 6. Pengujian dan pemeriksaan
 
 - Tes perhitungan jam, CSV, statistik lap, snapshot dan validasi sesi berada di `tests/logic.test.mjs`.
-- Workflow GitHub Actions menjalankan `npm install`, `npm run test`, lalu `npm run build` setelah proyek diunggah ke GitHub.
+- Workflow GitHub Actions menjalankan `npm ci`, `npm run test`, lalu `npm run build` setelah proyek diunggah ke GitHub.
 - Sebelum publikasi, jalankan `npm install`, `npm run test`, dan `npm run build` di komputer sendiri. GitHub Actions baru aktif setelah push repo.
 
-## 7. Ide roadmap
+## 7. Activity History v3.1 — cara menguji
 
-- [ ] Memperhalus a11y dan menambahkan pengujian browser Playwright
+- Stopwatch: tekan **Mulai**, catat lap (opsional), lalu **Simpan sesi**. Stopwatch di-reset **hanya jika penyimpanan berhasil**. Menekan **Reset** biasa tidak menyimpan riwayat.
+- Focus/Countdown: sesi yang mencapai nol dicatat sebagai **Selesai**. Jika dihentikan melalui **Reset** atau mengganti preset setelah minimal 1 detik, dicatat sebagai **Dihentikan**.
+- Pilih **Lihat riwayat** di bawah dashboard untuk filter, ekspor CSV atau hapus aktivitas.
+- Data baru hanya tersimpan pada browser/origin yang sama via **IndexedDB**. Data lap v3.0 di localStorage tetap dipertahankan.
+- Catatan: Focus/Countdown yang sedang berjalan belum dipulihkan jika tab ditutup/refresh. Riwayat sesi tersebut hanya dicatat ketika selesai atau dihentikan saat tab masih terbuka.
+- Sesi stopwatch lama v3.0 tanpa timestamp mulai menggunakan perkiraan `waktu selesai − durasi aktif` saat disimpan ke riwayat. Sesi baru mencatat waktu mulai pertama.
+- Uji: `npm run test`, `npm run build`, lalu `npx playwright test --workers=1`. Target pengujian E2E baru: 30 eksekusi (10 skenario x 3 browser), setelah kedua test baru benar-benar dijalankan.
+
+## 8. Ide roadmap
+
+- [x] Pengujian browser Playwright (24 tes v3.0 berhasil menurut hasil pengguna, dua skenario v3.1 ditambahkan)
 - [ ] Menyimpan Focus / Countdown lintas-refresh dan notifikasi akhir sesi
-- [ ] Grafik riwayat produktivitas mingguan
+- [ ] Grafik riwayat produktivitas mingguan (tahap v3.1 berikutnya)
 - [ ] PWA offline support
 - [ ] Deployment ke Vercel / Netlify dan CI/CD berbasis `npm ci` setelah `package-lock.json` dibuat
 - [ ] Desktop Windows melalui Tauri jika sudah siap belajar Rust
 
 ## Lisensi dan asal
+
+Pengujian browser Playwright dan audit tampilan telah dilakukan untuk v3.0; perubahan v3.1 harus diuji kembali sebelum rilis.
 
 Source proyek merupakan pengembangan dari JustSimple milik pemilik proyek. Versi v3 mempertahankan arah visual v2. Logo/favicon dan CSS dari proyek v2 diadaptasi. Pengembangan bertahap ini cocok ditunjukkan sebagai progres portofolio frontend.
