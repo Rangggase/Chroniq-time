@@ -156,7 +156,7 @@ export default function App() {
         <ProductivityAnalytics records={activity.records} loading={activity.loading} error={activity.error} />
         <GoalsInsights records={activity.records} loading={activity.loading} error={activity.error} />
       </main>
-      <footer className="site-footer"><span>© {new Date().getFullYear()} JustSimple <span className="footer-separator">/</span> Built with React + TypeScript.</span><span>Minimal by design. Precise by nature.</span></footer>
+      <footer className="site-footer"><span>© {new Date().getFullYear()} Chroniq <span className="footer-separator">/</span> Built with React + TypeScript.</span><span>Minimal by design. Precise by nature.</span></footer>
     </div>
   </>;
 }

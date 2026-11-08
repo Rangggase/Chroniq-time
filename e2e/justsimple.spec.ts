@@ -72,7 +72,7 @@ test('TC04 - ekspor data lap ke CSV', async ({ page }) => {
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export CSV' }).click();
   const download = await downloadPromise;
-  expect(download.suggestedFilename()).toMatch(/^JustSimple-Laps-\d{4}-\d{2}-\d{2}\.csv$/);
+  expect(download.suggestedFilename()).toMatch(/^Chroniq-Laps-\d{4}-\d{2}-\d{2}\.csv$/);
   const data = await readFile(await download.path(), 'utf8');
   expect(data).toContain('Durasi Lap');
   expect(data).toContain('Total Waktu');

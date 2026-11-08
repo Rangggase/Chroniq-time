@@ -26,7 +26,7 @@ test('TC10 - riwayat bisa diekspor dan dihapus', async ({ page }) => {
   await page.getByRole('button', { name: 'Lihat riwayat' }).click();
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Ekspor riwayat CSV' }).click();
-  expect((await downloadPromise).suggestedFilename()).toMatch(/^JustSimple-Activity-.*\.csv$/);
+  expect((await downloadPromise).suggestedFilename()).toMatch(/^Chroniq-Activity-.*\.csv$/);
   await page.getByRole('button', { name: /^Hapus aktivitas/ }).click();
   await expect(page.getByTestId('activity-total')).toHaveText('0');
 });

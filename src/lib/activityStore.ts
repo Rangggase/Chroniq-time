@@ -12,7 +12,7 @@ function openDatabase(): Promise<IDBDatabase> {
       if (!db.objectStoreNames.contains(STORE_NAME)) db.createObjectStore(STORE_NAME, { keyPath: 'id' });
     };
     request.onerror = () => reject(request.error ?? new Error('Database gagal dibuka.'));
-    request.onblocked = () => reject(new Error('Tutup tab JustSimple lain, lalu coba lagi.'));
+    request.onblocked = () => reject(new Error('Tutup tab Chroniq lain, lalu coba lagi.'));
     request.onsuccess = () => resolve(request.result);
   });
 }
