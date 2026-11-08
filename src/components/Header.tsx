@@ -5,9 +5,9 @@ interface Props { theme: Theme; onToggleTheme: () => void; }
 
 export default function Header({ theme, onToggleTheme }: Props) {
   return <header className="site-header">
-    <a className="brand" href="#beranda" aria-label="JustSimple — Beranda">
+    <a className="brand" href="#beranda" aria-label="Chroniq — Beranda">
       <span className="brand-icon"><Icon name="stopwatch" /></span>
-      <span className="brand-name">Just<span>Simple</span><small>TIME, REFINED. / V3</small></span>
+      <span className="brand-name">Chron<span>iq</span><small>TIME, REFINED.</small></span>
     </a>
     <div className="header-actions">
       <span className="header-label"><span className="tiny-dot"/> FOCUS ON WHAT MATTERS</span>

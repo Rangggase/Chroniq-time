@@ -23,7 +23,7 @@ function downloadHistory(records: ActivityRecord[]) {
   const url = URL.createObjectURL(new Blob([activitiesToCsv(records)], { type: 'text/csv;charset=utf-8' }));
   const anchor = document.createElement('a');
   anchor.href = url;
-  anchor.download = `JustSimple-Activity-${new Date().toISOString().slice(0, 10)}.csv`;
+  anchor.download = `Chroniq-Activity-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.append(anchor);
   anchor.click();
   anchor.remove();

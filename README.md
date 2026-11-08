@@ -1,10 +1,14 @@
-# JustSimple v3.1 — Every Second Counts
+# Chroniq — Every Second Counts
 
 **Stopwatch, Focus Timer, Countdown, Activity History, Productivity Analytics, dan Goals & Insights dalam satu aplikasi web.**
 
-JustSimple berawal dari aplikasi stopwatch sederhana yang dibuat pada awal perkuliahan. Proyek ini kemudian dikembangkan dengan antarmuka yang lebih matang dan dimigrasikan ke **React + TypeScript + Vite**, dengan fitur pencatatan sesi, analitik aktivitas, serta target fokus harian. Antarmuka berbahasa Indonesia, responsif, dan menyediakan tema gelap/terang.
+Chroniq dikembangkan dari proyek stopwatch awal perkuliahan yang sebelumnya bernama **JustSimple**. Proyek ini kemudian dikembangkan dengan antarmuka yang lebih matang dan dimigrasikan ke **React + TypeScript + Vite**, dengan fitur pencatatan sesi, analitik aktivitas, serta target fokus harian. Antarmuka berbahasa Indonesia, responsif, dan menyediakan tema gelap/terang.
 
-> **Status:** Kandidat rilis `v3.1.0`. Pengujian lokal telah lulus; publikasi GitHub, verifikasi GitHub Actions, dan deployment belum dinyatakan selesai.
+> **Status:** `v3.1.0` telah dirilis di GitHub dan dideploy ke GitHub Pages. Perubahan branding `v3.1.1` merupakan pembaruan kecil yang **belum dirilis** dan harus melewati CI serta pengujian publik sebelum dibuat tag baru.
+
+**Website:** https://rangggase.github.io/Chroniq-time/
+**Repository:** https://github.com/Rangggase/Chroniq-time
+**Release v3.1.0:** https://github.com/Rangggase/Chroniq-time/releases/tag/v3.1.0
 
 ## Fitur utama
 
@@ -79,7 +83,7 @@ Untuk menyiapkan browser Playwright di perangkat baru:
 npx playwright install
 ```
 
-### Rekap validasi lokal v3.1
+### Rekap validasi rilis v3.1.0
 
 | Pemeriksaan | Hasil | Keterangan |
 | --- | --- | --- |
@@ -88,28 +92,29 @@ npx playwright install
 | Manual acceptance | **6/6 lulus** | Pemeriksaan fitur, penyimpanan, statistik, tema, dan responsivitas oleh pengembang. |
 | Production build | **Lulus** | `tsc -b && vite build`. |
 
-Hasil tersebut adalah pengujian **lokal** sebelum publikasi. GitHub Actions perlu diverifikasi kembali setelah kode didorong ke repository remote.
+Hasil tersebut adalah baseline pengujian `v3.1.0`, termasuk pengujian GitHub Actions yang telah dilaporkan berhasil. Patch branding `v3.1.1` menambah satu skenario E2E per browser; jalankan ulang seluruh tes sebelum merilis patch.
 
-### Audit Lighthouse lokal (8 November 2026)
+### Audit PageSpeed Insights website publik (8 November 2026)
 
-Audit dilakukan terhadap halaman preview build produksi. Skor merupakan hasil saat pengukuran dan dapat berubah bergantung perangkat, data browser, serta kondisi jaringan.
+Audit dilakukan pada website publik Chroniq setelah deployment GitHub Pages. Skor merupakan hasil satu pengukuran dan dapat berubah bergantung perangkat serta kondisi jaringan.
 
 | Kategori | Mobile | Desktop |
 | --- | ---: | ---: |
 | Performance | **97** | **100** |
 | Accessibility | **100** | **100** |
 | Best Practices | **100** | **100** |
-| SEO | **91** | **91** |
+| SEO | **100** | **100** |
 
-Lighthouse mendeteksi bahwa data tersimpan di **IndexedDB** dapat memengaruhi pengukuran. Pengujian pembanding di jendela Incognito direkomendasikan. Audit SEO di `localhost` bukan pengganti pemeriksaan SEO setelah aplikasi terpasang pada URL publik. Skor 100 Accessibility juga bukan jaminan pemenuhan seluruh kriteria WCAG.
+Skor PageSpeed Insights berasal dari laporan halaman publik yang diperiksa setelah deployment. Skor Accessibility 100 tidak otomatis menjamin pemenuhan seluruh kriteria WCAG.
 
 ## Struktur proyek
 
 ```text
-JustSimple-v3/
+JustSimple-v3/  # Nama folder lokal historis; tidak harus diganti
 ├── .github/workflows/
 │   ├── ci.yml                  # Unit test + build
-│   └── playwright.yml          # Cross-browser E2E
+│   ├── playwright.yml          # Cross-browser E2E
+│   └── deploy.yml              # GitHub Pages
 ├── e2e/                       # TC01–TC14 (Playwright)
 ├── public/
 │   └── favicon.svg
@@ -140,7 +145,7 @@ Dokumentasi teknis tiap fase tersedia di `README_PATCH_V31.md`, `README_PHASE2_A
 ## Penyimpanan data dan privasi
 
 - **IndexedDB** menyimpan riwayat aktivitas di browser/perangkat yang digunakan.
-- **`localStorage`** menyimpan sesi Stopwatch (`justsimple.session.v3`), preferensi tema (`justsimple.theme.v1`), serta target fokus (`justsimple.daily-focus-goal.v1`).
+- **`localStorage`** menyimpan sesi Stopwatch (`justsimple.session.v3`), preferensi tema (`justsimple.theme.v1`), serta target fokus (`justsimple.daily-focus-goal.v1`). Key lama sengaja dipertahankan setelah rebranding agar data pengguna tetap kompatibel.
 - Pada origin yang sama, aplikasi dapat membaca format sesi Stopwatch v2 (`justsimple.session.v1`) ketika belum ada sesi v3.
 - **Tidak ada login dan sinkronisasi cloud.** Data aktivitas tidak dikirim ke backend aplikasi.
 - Penyimpanan browser dibatasi oleh **origin**. Data di `localhost:5173` tidak otomatis tersedia di `localhost:4173` atau domain deployment.
@@ -166,16 +171,15 @@ Shortcut hanya berlaku saat mode Stopwatch aktif dan fokus tidak berada pada kol
 | `L` | Catat lap |
 | `Shift + R` | Reset Stopwatch beserta lap |
 
-## Continuous Integration dan persiapan rilis
+## Continuous Integration dan deployment
 
-Repository menyertakan dua workflow GitHub Actions:
+Repository menyertakan workflow GitHub Actions:
 
 1. `.github/workflows/ci.yml` — `npm ci`, `npm run test`, dan `npm run build`.
 2. `.github/workflows/playwright.yml` — memasang browser dan menjalankan Playwright E2E.
+3. `.github/workflows/deploy.yml` — build dan deployment ke GitHub Pages setelah perubahan digabungkan ke `main`.
 
-Workflow dikonfigurasi untuk event `push` dan `pull_request`. **Keberhasilan eksekusi pada GitHub belum dikonfirmasi** dalam README ini; periksa halaman **Actions** sebelum membuat tag rilis resmi.
-
-Tahapan rilis berikutnya: verifikasi CI remote, final review, gabungkan branch pengembangan ke `main`, ulangi pengujian pada `main`, buat tag `v3.1.0`, lalu buat GitHub Release dan deployment.
+Workflow test dikonfigurasi untuk event `push` dan `pull_request`; deployment berjalan dari branch `main`. Rilis `v3.1.0` sudah diterbitkan dan situs publik telah diverifikasi. Untuk final polish `v3.1.1`, gunakan branch tersendiri, Pull Request, pengujian ulang, baru tag rilis setelah hasilnya lulus.
 
 ## Riwayat versi
 
@@ -186,11 +190,13 @@ Tahapan rilis berikutnya: verifikasi CI remote, final review, gabungkan branch p
 | **v3.1 Fase 1** | Activity History di IndexedDB. |
 | **v3.1 Fase 2** | Productivity Analytics dan filter periode. |
 | **v3.1 Fase 3** | Goals & Insights, pencapaian dan streak. |
+| **v3.1.0** | Stable release, GitHub Actions, GitHub Release, dan GitHub Pages. |
+| **v3.1.1 (rencana)** | Konsistensi branding Chroniq, metadata dan nama ekspor CSV; tidak ada migrasi storage. |
 
-Versi `v3.1.0` masih berada pada tahap persiapan rilis sampai proses publikasi selesai.
+Perubahan `v3.1.1` belum dianggap rilis sampai pengujian dan deployment terbaru berhasil.
 
 ## Asal proyek dan lisensi
 
-JustSimple merupakan pengembangan berkelanjutan dari proyek stopwatch pribadi yang dibuat pada awal kuliah. Source code dan desain dikembangkan bertahap sebagai portofolio frontend dan software engineering.
+Chroniq (sebelumnya JustSimple) merupakan pengembangan berkelanjutan dari proyek stopwatch pribadi yang dibuat pada awal kuliah. Source code dan desain dikembangkan bertahap sebagai portofolio frontend dan software engineering.
 
 **Lisensi belum ditetapkan.** Jika repository dipublikasikan, pemilik proyek dapat memilih untuk menambahkan file `LICENSE` secara terpisah. Ketiadaan file lisensi tidak otomatis memberikan izin penggunaan ulang kepada pihak lain.
