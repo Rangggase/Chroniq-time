@@ -144,3 +144,10 @@ Pada kunjungan pertama, V3 mencoba membaca data stopwatch V2 jika berasal dari *
 Pengujian browser Playwright dan audit tampilan telah dilakukan untuk v3.0; perubahan v3.1 harus diuji kembali sebelum rilis.
 
 Source proyek merupakan pengembangan dari JustSimple milik pemilik proyek. Versi v3 mempertahankan arah visual v2. Logo/favicon dan CSS dari proyek v2 diadaptasi. Pengembangan bertahap ini cocok ditunjukkan sebagai progres portofolio frontend.
+
+## v3.1 Fase 2 — Productivity Analytics
+
+Dashboard statistik lokal berdasarkan Activity History (IndexedDB): filter 7/30/90 hari,
+tren menit fokus, jumlah sesi fokus selesai, rata-rata, hari aktif, serta durasi per mode.
+Data fokus hanya menghitung preset Focus yang selesai, bukan istirahat atau sesi terhenti.
+Lihat `README_PHASE2_ANALYTICS.md` untuk definisi metrik, pemasangan patch, dan pengujian.
