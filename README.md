@@ -1,6 +1,6 @@
 # JustSimple v3 — Every Second Counts
 
-**Versi 3.1.0 (Activity History — tahap 1) | React + TypeScript + Vite | UI berbahasa Indonesia**
+**Versi 3.1.0 (pengembangan Fase 3 — Goals & Insights) | React + TypeScript + Vite | UI berbahasa Indonesia**
 
 Aplikasi produktivitas berbasis web yang dikembangkan dari proyek stopwatch **JustSimple** (proyek awal kuliah), dilanjutkan menjadi JustSimple Pro v2, lalu dimigrasikan ke arsitektur komponen React di v3. Desain dark/light minimalis dan fitur-fitur stopwatch tetap dipertahankan.
 
@@ -10,6 +10,8 @@ Aplikasi produktivitas berbasis web yang dikembangkan dari proyek stopwatch **Ju
 | --- | --- |
 | Stopwatch | Mulai, jeda, lanjutkan, reset, waktu hingga milidetik |
 | Activity History v3.1 | Simpan sesi stopwatch secara eksplisit; Focus/Countdown lengkap dicatat otomatis; sesi yang dihentikan setelah berjalan disimpan sebagai interrupted (minimal 1 detik); IndexedDB + filter, ekspor CSV dan hapus data |
+| Productivity Analytics v3.1 | Grafik 7/30/90 hari, statistik waktu fokus kerja selesai, sesi, rata-rata durasi dan jumlah hari aktif |
+| Goals & Insights v3.1 | Target harian 15–480 menit, progres harian, pencapaian mingguan dan streak hari dengan sesi Focus selesai |
 | Lap tracker | Catat putaran, lap tercepat, lap terlama, rata-rata, lap berjalan |
 | Riwayat | Tabel lap dari terbaru, hapus lap tanpa mereset timer, export CSV |
 | Persistensi | Stopwatch tersimpan otomatis di `localStorage`, termasuk saat tab dimuat ulang |
@@ -73,7 +75,9 @@ JustSimple-v3/
 │   │   ├── LapHistory.tsx
 │   │   ├── FocusPanel.tsx
 │   │   ├── CountdownPanel.tsx
-│   │   └── ActivityHistory.tsx
+│   │   ├── ActivityHistory.tsx
+│   │   ├── ProductivityAnalytics.tsx
+│   │   └── GoalsInsights.tsx
 │   ├── hooks/
 │   │   ├── useStopwatch.ts      # State stopwatch + animation frame
 │   │   ├── useCountdown.ts      # Countdown berdasarkan deadline waktu
@@ -84,12 +88,15 @@ JustSimple-v3/
 │   │   ├── session.ts           # Validasi + migrasi sesi v2
 │   │   ├── download.ts
 │   │   ├── activity.ts
-│   │   └── activityStore.ts          # Simpan berkas CSV
+│   │   ├── activityStore.ts          # IndexedDB riwayat aktivitas
+│   │   ├── analytics.ts              # Statistik produktivitas
+│   │   └── goals.ts                  # Progres, target, dan streak
 │   ├── styles/global.css       # Adaptasi desain CSS JustSimple v2
 │   ├── types.ts
 │   ├── App.tsx
 │   └── main.tsx
-├── tests/logic.test.mjs         # Unit tests dengan Node test runner
+├── tests/                    # Unit tests logika, aktivitas, analitik, dan goals
+├── e2e/                      # Playwright TC01–TC14 (3 browser)
 ├── index.html
 ├── package.json
 ├── tsconfig*.json
@@ -134,7 +141,8 @@ Pada kunjungan pertama, V3 mencoba membaca data stopwatch V2 jika berasal dari *
 
 - [x] Pengujian browser Playwright (24 tes v3.0 berhasil menurut hasil pengguna, dua skenario v3.1 ditambahkan)
 - [ ] Menyimpan Focus / Countdown lintas-refresh dan notifikasi akhir sesi
-- [ ] Grafik riwayat produktivitas mingguan (tahap v3.1 berikutnya)
+- [x] Grafik dan ringkasan produktivitas 7/30/90 hari (Fase 2)
+- [x] Goals & Insights: target harian, progres, streak (Fase 3, masih perlu verifikasi browser lokal)
 - [ ] PWA offline support
 - [ ] Deployment ke Vercel / Netlify dan CI/CD berbasis `npm ci` setelah `package-lock.json` dibuat
 - [ ] Desktop Windows melalui Tauri jika sudah siap belajar Rust
@@ -151,3 +159,11 @@ Dashboard statistik lokal berdasarkan Activity History (IndexedDB): filter 7/30/
 tren menit fokus, jumlah sesi fokus selesai, rata-rata, hari aktif, serta durasi per mode.
 Data fokus hanya menghitung preset Focus yang selesai, bukan istirahat atau sesi terhenti.
 Lihat `README_PHASE2_ANALYTICS.md` untuk definisi metrik, pemasangan patch, dan pengujian.
+
+## v3.1 Fase 3 — Goals & Insights
+
+Target fokus harian yang dapat dipilih (15–480 menit, kelipatan 15), progres harian,
+pencapaian Senin–Minggu, serta streak hari fokus aktif berdasarkan Activity History.
+Pengaturan target disimpan di `localStorage`; durasi sesi tetap berasal dari IndexedDB.
+Sesi istirahat, sesi terhenti, Stopwatch, dan Countdown tidak menambah waktu fokus.
+Lihat `README_PHASE3_GOALS.md` untuk definisi metrik dan langkah pengujian.

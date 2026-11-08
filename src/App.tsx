@@ -17,6 +17,7 @@ import FocusPanel from './components/FocusPanel.tsx';
 import CountdownPanel from './components/CountdownPanel.tsx';
 import ActivityHistory from './components/ActivityHistory.tsx';
 import ProductivityAnalytics from './components/ProductivityAnalytics.tsx';
+import GoalsInsights from './components/GoalsInsights.tsx';
 import Icon from './components/Icons.tsx';
 
 function startedAtForTimer(startedAt: string | null, durationMs: number, endEpoch: number) {
@@ -153,6 +154,7 @@ export default function App() {
         {mode === 'countdown' && <CountdownPanel timer={countdown} minutes={countdownMinutes} onChangeMinutes={setCountdownMinutes} onChoose={chooseCountdown} onToggle={handleCountdownToggle} onReset={handleCountdownReset} />}
         <ActivityHistory records={activity.records} loading={activity.loading} error={activity.error} onRemove={activity.remove} onClear={activity.clear} />
         <ProductivityAnalytics records={activity.records} loading={activity.loading} error={activity.error} />
+        <GoalsInsights records={activity.records} loading={activity.loading} error={activity.error} />
       </main>
       <footer className="site-footer"><span>© {new Date().getFullYear()} JustSimple <span className="footer-separator">/</span> Built with React + TypeScript.</span><span>Minimal by design. Precise by nature.</span></footer>
     </div>
