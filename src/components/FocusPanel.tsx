@@ -3,15 +3,15 @@ import { presets, type FocusPreset, useFocusTimer } from '../hooks/useFocusTimer
 import { formatCountdown } from '../lib/time.ts';
 import Icon from './Icons.tsx';
 
-interface Props { focus: ReturnType<typeof useFocusTimer>; }
+interface Props { focus: ReturnType<typeof useFocusTimer>; onToggle?: () => void; onReset?: () => void; onChoose?: (preset: FocusPreset) => void; }
 
-export default function FocusPanel({ focus }: Props) {
+export default function FocusPanel({ focus, onToggle = focus.toggle, onReset = focus.reset, onChoose = focus.choose }: Props) {
   const progress = Math.min(100, Math.max(0, (1 - focus.remainingMs / focus.durationMs) * 100));
   return <div className="dashboard-grid secondary-grid" role="tabpanel" id="panel-focus" aria-labelledby="tab-focus">
     <section className="card productivity-card" aria-labelledby="focus-title">
       <div className="section-header"><div><p className="section-overline">01 — FOCUS STUDIO</p><h2 id="focus-title">Focus timer</h2></div><span className="tool-badge"><Icon name="focus"/> POMODORO</span></div>
       <div className="preset-row" aria-label="Jenis sesi">
-        {(Object.keys(presets) as FocusPreset[]).map(key => <button type="button" key={key} aria-pressed={focus.preset === key} className={`preset${focus.preset === key ? ' selected' : ''}`} onClick={() => focus.choose(key)}>{presets[key].label}</button>)}
+        {(Object.keys(presets) as FocusPreset[]).map(key => <button type="button" key={key} aria-pressed={focus.preset === key} className={`preset${focus.preset === key ? ' selected' : ''}`} onClick={() => onChoose(key)}>{presets[key].label}</button>)}
       </div>
       <div className="countdown-stage">
         <div className="progress-halo" style={{ '--progress': `${progress}%` } as CSSProperties}><Icon name="focus" /></div>
@@ -20,8 +20,8 @@ export default function FocusPanel({ focus }: Props) {
         <p className="time-hint">{focus.finished ? 'Sesi selesai. Kerja bagus!' : presets[focus.preset].note}</p>
       </div>
       <div className="productivity-controls">
-        <button className={`button button-primary${focus.running ? ' is-running' : ''}`} type="button" onClick={focus.toggle}><Icon name={focus.running ? 'pause' : 'play'}/>{focus.running ? 'Jeda' : focus.remainingMs < focus.durationMs && focus.remainingMs > 0 ? 'Lanjutkan' : 'Mulai fokus'}</button>
-        <button className="button button-ghost" type="button" onClick={focus.reset}><Icon name="reset"/>Reset</button>
+        <button className={`button button-primary${focus.running ? ' is-running' : ''}`} type="button" onClick={onToggle}><Icon name={focus.running ? 'pause' : 'play'}/>{focus.running ? 'Jeda' : focus.remainingMs < focus.durationMs && focus.remainingMs > 0 ? 'Lanjutkan' : 'Mulai fokus'}</button>
+        <button className="button button-ghost" type="button" onClick={onReset}><Icon name="reset"/>Reset</button>
       </div>
     </section>
     <aside className="card productivity-info" aria-labelledby="focus-stats-title">

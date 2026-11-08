@@ -16,14 +16,15 @@ function readCompleted(): number {
   } catch { return 0; }
 }
 
-export function useFocusTimer() {
+export function useFocusTimer(onSessionComplete?: (preset: FocusPreset, durationMs: number) => void) {
   const [preset, setPreset] = useState<FocusPreset>('focus');
   const [completed, setCompleted] = useState(readCompleted);
   const [finished, setFinished] = useState(false);
   const onComplete = useCallback(() => {
     setFinished(true);
     if (preset === 'focus') setCompleted(current => current + 1);
-  }, [preset]);
+    onSessionComplete?.(preset, presets[preset].minutes * 60_000);
+  }, [preset, onSessionComplete]);
   const timer = useCountdown(presets.focus.minutes * 60_000, onComplete);
 
   useEffect(() => {

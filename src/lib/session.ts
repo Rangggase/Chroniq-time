@@ -4,7 +4,7 @@ export const STORAGE_KEY = 'justsimple.session.v3';
 export const LEGACY_STORAGE_KEY = 'justsimple.session.v1';
 
 export function emptySession(): StopwatchState {
-  return { elapsedBeforeRun: 0, startedAtPerf: null, startedAtEpoch: null, running: false, lapAnchorMs: 0, laps: [] };
+  return { elapsedBeforeRun: 0, startedAtPerf: null, startedAtEpoch: null, sessionStartedAtEpoch: null, running: false, lapAnchorMs: 0, laps: [] };
 }
 
 const validMs = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0;
@@ -13,6 +13,7 @@ interface StoredSession {
   version: 1 | 3;
   elapsedBeforeRun: number;
   startedAtEpoch: number | null;
+  sessionStartedAtEpoch?: number | null;
   running: boolean;
   lapAnchorMs: number;
   laps: Lap[];
@@ -30,11 +31,13 @@ export function parseSession(raw: unknown, epochNow: number, perfNow: number): S
     typeof lap.recordedAt === 'string');
   if (!validLaps) return null;
   if (data.running && (!validMs(data.startedAtEpoch) || data.startedAtEpoch === 0)) return null;
+  if (data.sessionStartedAtEpoch != null && !validMs(data.sessionStartedAtEpoch)) return null;
   const elapsedBeforeRun = data.elapsedBeforeRun + (data.running ? Math.max(0, epochNow - (data.startedAtEpoch ?? epochNow)) : 0);
   return {
     elapsedBeforeRun,
     startedAtPerf: data.running ? perfNow : null,
     startedAtEpoch: data.running ? epochNow : null,
+    sessionStartedAtEpoch: data.sessionStartedAtEpoch ?? null,
     running: data.running,
     lapAnchorMs: data.lapAnchorMs,
     laps: data.laps.map(lap => ({ ...lap })),
@@ -52,6 +55,7 @@ export function toStoredSession(state: StopwatchState): StoredSession {
     version: 3,
     elapsedBeforeRun: state.elapsedBeforeRun,
     startedAtEpoch: state.running ? state.startedAtEpoch : null,
+    sessionStartedAtEpoch: state.sessionStartedAtEpoch,
     running: state.running,
     lapAnchorMs: state.lapAnchorMs,
     laps: state.laps,

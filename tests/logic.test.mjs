@@ -74,3 +74,11 @@ test('invalid sessions are rejected safely', () => {
   assert.equal(parseSession({ version: 1, elapsedBeforeRun: 1, lapAnchorMs: 0, running: true, startedAtEpoch: null, laps: [] }, 1, 1), null);
   assert.equal(parseSession({ version: 3, elapsedBeforeRun: 1, lapAnchorMs: 0, running: false, laps: [{ number: 9, splitMs: 10, totalMs: 10, recordedAt: 'x' }] }, 1, 1), null);
 });
+
+
+test('v3.1 session stores first start time through pause/refresh', () => {
+  const firstStart = 1762506000000;
+  const stored = toStoredSession({ ...emptySession(), elapsedBeforeRun: 5000, sessionStartedAtEpoch: firstStart });
+  const restored = parseSession(stored, firstStart + 7000, 100);
+  assert.equal(restored?.sessionStartedAtEpoch, firstStart);
+});

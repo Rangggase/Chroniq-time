@@ -30,7 +30,7 @@ export function useStopwatch() {
     setNow(time);
     setState(current => current.running
       ? { ...current, elapsedBeforeRun: getElapsed(current, time), startedAtPerf: null, startedAtEpoch: null, running: false }
-      : { ...current, startedAtPerf: time, startedAtEpoch: epoch, running: true });
+      : { ...current, startedAtPerf: time, startedAtEpoch: epoch, sessionStartedAtEpoch: current.sessionStartedAtEpoch ?? epoch, running: true });
   }, []);
 
   const lap = useCallback(() => {

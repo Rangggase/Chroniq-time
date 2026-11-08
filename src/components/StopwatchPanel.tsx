@@ -9,9 +9,11 @@ interface Props {
   onToggle: () => void;
   onLap: () => void;
   onReset: () => void;
+  onSave: () => void;
+  saving: boolean;
 }
 
-export default function StopwatchPanel({ state, elapsedMs, onToggle, onLap, onReset }: Props) {
+export default function StopwatchPanel({ state, elapsedMs, onToggle, onLap, onReset, onSave, saving }: Props) {
   const display = formatDuration(elapsedMs);
   const dot = display.lastIndexOf('.');
   const started = state.running || elapsedMs > 0;
@@ -38,6 +40,9 @@ export default function StopwatchPanel({ state, elapsedMs, onToggle, onLap, onRe
       </button>
       <button className="button button-secondary" type="button" aria-keyshortcuts="L" onClick={onLap} disabled={!state.running || state.laps.length >= 2000}>
         <Icon name="flag"/>Catat lap
+      </button>
+      <button className="button button-secondary" type="button" onClick={onSave} disabled={saving || !started}>
+        <Icon name="check"/>{saving ? 'Menyimpan...' : 'Simpan sesi'}
       </button>
       <button className="button button-ghost" type="button" aria-keyshortcuts="Shift+R" title="Reset timer dan seluruh lap" onClick={onReset} disabled={!started && state.laps.length === 0}>
         <Icon name="reset"/>Reset
