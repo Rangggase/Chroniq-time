@@ -22,6 +22,18 @@ Chroniq dikembangkan dari proyek stopwatch awal perkuliahan yang sebelumnya bern
 | **Goals & Insights** | Target fokus harian, progres, pencapaian mingguan, streak aktif, dan streak terpanjang. |
 | **Pengalaman pengguna** | Dark/light mode, tampilan responsif, penyimpanan lokal, dan shortcut keyboard pada Stopwatch. |
 
+
+## Project Case Study
+
+Explore the evolution from the original JustSimple
+stopwatch to Chroniq v3.1.1.
+
+This case study documents the architecture,
+development process, engineering challenges,
+testing, and CI/CD deployment.
+
+[Read the Full Case Study](docs/CASE_STUDY.md)
+
 ### Aturan perhitungan statistik
 
 - **Waktu fokus** hanya menghitung sesi *Focus kerja* yang selesai. Waktu istirahat, sesi yang terhenti, Stopwatch, dan Countdown **tidak** menambah menit fokus.
